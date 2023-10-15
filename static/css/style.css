@@ -33,3 +33,7 @@ a {
     font-size: 12px;
     line-height: 100%;
 }
+
+.tags, .authors { 
+    max-width: 100px;
+}
