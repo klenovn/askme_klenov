@@ -8,62 +8,7 @@
     <title>Askme</title>
 </head>
 <body>
-    <!-- <header class="">
-        <nav class="navbar">
-            <div class="container-fluid justify-content-between">
-                <div class="col">
-                    <a class="navbar-brand py-0 logo d-flex align-items-center" href="#">
-                        <img class="logo-image" src="../static/images/logo.jpeg" alt="">
-                        AskMe
-                    </a>
-                </div>
-                <div class="search col">
-                    <form class="d-flex me-2">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-outline-success" type="submit">Search</button>
-                    </form>
-                </div>
-                <div class="login-info col d-flex">
-                    <img class="user-avatar p-0 border-dark border rounded-circle ms-auto" src="../static/images/user_avatar_placeholder.jpeg" alt="">
-                    <div class="align-self-center ps-4">
-                        <div class="row mb-2">Username</div>
-                        <div class="row">
-                            <div class="col p-0 pe-2">Settings</div>
-                            <div class="col p-0">Log out</div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </nav>
-    </header> -->
-    <!-- <header class="p-3 text-bg-dark">
-        <div class="container">
-          <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-            <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
-              <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"/></svg>
-            </a>
-    
-            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-              <li><a href="#" class="nav-link px-2 text-secondary">Home</a></li>
-              <li><a href="#" class="nav-link px-2 text-white">Features</a></li>
-              <li><a href="#" class="nav-link px-2 text-white">Pricing</a></li>
-              <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li>
-              <li><a href="#" class="nav-link px-2 text-white">About</a></li>
-            </ul>
-    
-            <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
-              <input type="search" class="form-control form-control-dark text-bg-dark" placeholder="Search..." aria-label="Search">
-            </form>
-    
-            <div class="text-end">
-              <button type="button" class="btn btn-outline-light me-2">Login</button>
-              <button type="button" class="btn btn-warning">Sign-up</button>
-            </div>
-          </div>
-        </div>
-      </header> -->
-      <header class="p-3 text-bg-dark">
+    <header class="p-3 text-bg-dark">
         <div class="container">
             <div class="d-flex flex-wrap align-items-center justify-content-between">
                 <a class="navbar-brand py-0 logo d-flex align-items-center" href="#">
@@ -78,10 +23,12 @@
 
                 <div class="login-info d-flex">
                     <div class="align-self-center ps-4 dropdown">
-                        <a href="#" class="dropdown-arrow text-light link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a href="#" class="dropdown-arrow text-light link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" data-bs-offset="0,20" aria-expanded="false">
                             <img class="user-avatar p-0 border-dark border rounded-circle ms-auto" src="../static/images/user_avatar_placeholder.jpeg" alt="">
                         </a>
-                        <ul class="dropdown-menu mt-3 text-small">
+                        <ul class="dropdown-menu text-small">
+                            <li class="dropdown-item-text">Nickname</li>
+                            <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="#">Settings</a></li>
                             <li><a class="dropdown-item" href="#">Profile</a></li>
                             <li><hr class="dropdown-divider"></li>
@@ -91,38 +38,38 @@
                 </div>
             </div>
         </div>
-      </header>
+    </header>
 
     <div class="container">
-        <div class="row justify-content-end pt-4">
+        <div class="row justify-content-between pt-4">
             <div class="col-8">
-                test
+
             </div>
             <div class="col-3">
                 <div class="row pb-3">
                     <p class="h5">Popular tags</p>
                     <div class="tags">
-                        <span class="badge text-bg-primary">Python</span>
-                        <span class="badge text-bg-warning">JavaScript</span>
-                        <span class="badge text-bg-danger">Go</span>
-                        <span class="badge text-bg-success">Kotlin</span>
+                        <a href="#"><span class="badge text-bg-primary">Python</span></a>
+                        <a href="#"><span class="badge text-bg-warning">JavaScript</span></a>
+                        <a href="#"><span class="badge text-bg-danger">Go</span></a>
+                        <a href="#"><span class="badge text-bg-success">Kotlin</span></a>
                     </div>
                 </div>
                 <div class="row">
                     <p class="h5">Best members</p>
                     <div class="authors">
-                        <span class="badge text-bg-primary">Dan Brown</span>
-                        <span class="badge text-bg-warning">Ben Black</span>
-                        <span class="badge text-bg-danger">Constantine</span>
-                        <span class="badge text-bg-success">Allan White</span>
+                        <a href="#"><span class="badge text-bg-primary">Dan Brown</span></a>
+                        <a href="#"><span class="badge text-bg-warning">Ben Black</span></a>
+                        <a href="#"><span class="badge text-bg-danger">Constantine</span></a>
+                        <a href="#"><span class="badge text-bg-success">Allan White</span></a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="../static/js/popper.min.js"></script>
-    <script src="../static/js/bootstrap.min.js"></script>
-    
+    <script src="../static/js_bootstrap/popper.min.js"></script>
+    <script src="../static/js_bootstrap/bootstrap.min.js"></script>
+    <script src="../static/js/main.js"></script>
 </body>
 </html>

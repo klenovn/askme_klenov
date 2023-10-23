@@ -45,3 +45,46 @@ header a {
 .dropdown-arrow {
     color: white;
 }
+
+.question-user-avatar {
+    width: 64px;
+    height: 64px;
+}
+
+.question-like {
+    fill: red;
+}
+
+.reaction {
+    width: 24px;
+}
+
+.no-focus {
+    border: none;
+}
+
+.question, .answer {
+    margin-bottom: 20px;
+}
+
+.reactions {
+    margin-top: 8px;
+}
+
+.question-title {
+    font-size: 24px;
+}
+
+.question a {
+    text-decoration: none;
+}
+
+.question-tag {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.question-text {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
