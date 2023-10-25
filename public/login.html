@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../static/css_bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/css/sticky_footer.css">
     <link rel="stylesheet" href="../static/css/style.css">
     <title>Askme</title>
 </head>
@@ -96,16 +97,44 @@
                 </div>
                 <div class="row">
                     <p class="h5">Best members</p>
-                    <div class="authors">
-                        <a href="#"><span class="badge text-bg-primary">Dan Brown</span></a>
-                        <a href="#"><span class="badge text-bg-warning">Ben Black</span></a>
-                        <a href="#"><span class="badge text-bg-danger">Constantine</span></a>
-                        <a href="#"><span class="badge text-bg-success">Allan White</span></a>
+                    <div class="container">
+                        <ul class="list-group">
+                            <a href="#">
+                                <li class="list-group-item">
+                                    <img class="user-avatar p-0 border-dark border rounded-circle ms-auto me-2" src="../static/images/user_avatar_placeholder.jpeg" alt="">
+                                    <span>Dan Brown</span>
+                                </li>
+                            </a>
+                            <a href="#">
+                                <li class="list-group-item">
+                                    <img class="user-avatar p-0 border-dark border rounded-circle ms-auto me-2" src="../static/images/user_avatar_placeholder.jpeg" alt="">
+                                    <span>Ben Black</span>
+                                </li>
+                            </a>
+                            <a href="#">
+                                <li class="list-group-item">
+                                    <img class="user-avatar p-0 border-dark border rounded-circle ms-auto me-2" src="../static/images/user_avatar_placeholder.jpeg" alt="">
+                                    <span>Constantine</span>
+                                </li>
+                            </a>
+                            <a href="#">
+                                <li class="list-group-item">
+                                    <img class="user-avatar p-0 border-dark border rounded-circle ms-auto me-2" src="../static/images/user_avatar_placeholder.jpeg" alt="">
+                                    <span>Allan White</span>
+                                </li>
+                            </a>
+                        </ul>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <footer class="footer">
+        <div class="container">
+          <span class="text-muted">Place sticky footer content here.</span>
+        </div>
+    </footer>
 
     <script src="../static/js_bootstrap/popper.min.js"></script>
     <script src="../static/js_bootstrap/bootstrap.min.js"></script>
