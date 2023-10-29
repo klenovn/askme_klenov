@@ -3,102 +3,106 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../static/css_bootstrap/bootstrap.min.css">
-    <link rel="stylesheet" href="../static/css/sticky_footer.css">
+    <link rel="stylesheet" href="../static/css_lib/bootstrap.min.css">
     <link rel="stylesheet" href="../static/css/style.css">
     <title>Askme</title>
 </head>
 <body>
-    <header class="p-3 text-bg-dark">
-        <div class="container">
-            <div class="d-flex flex-wrap align-items-center justify-content-between">
-                <a class="navbar-brand py-0 logo d-flex align-items-center" href="#">
-                    <img class="logo-image" src="../static/images/logo.png" alt="">
-                    AskMe
-                </a>
+    <div class="wrapper">
 
-                <form class="d-flex col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
-                    <input type="search" class="nav-search me-1 form-control form-control-dark text-bg-dark" placeholder="Search..." aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Search</button>
-                </form>
-
-                <div class="login-info d-flex">
-                    <div class="align-self-center ps-4 dropdown">
-                        <a href="#" class="dropdown-arrow text-light link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" data-bs-offset="0,20" aria-expanded="false">
-                            <img class="user-avatar p-0 border-dark border rounded-circle ms-auto" src="../static/images/user_avatar_placeholder.jpeg" alt="">
-                        </a>
-                        <ul class="dropdown-menu text-small">
-                            <li class="dropdown-item-text">Nickname</li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="#">Settings</a></li>
-                            <li><a class="dropdown-item" href="#">Profile</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="#">Sign out</a></li>
-                          </ul>
+        <header class="p-3 text-bg-dark">
+            <div class="container">
+                <div class="d-flex flex-wrap align-items-center justify-content-between">
+                    <a class="navbar-brand py-0 logo d-flex align-items-center" href="#">
+                        <img class="logo-image" src="../static/images/logo.png" alt="">
+                        AskMe
+                    </a>
+    
+                    <form class="d-flex col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
+                        <input type="search" class="nav-search me-1 form-control form-control-dark text-bg-dark" id="navSearch" placeholder="Search..." aria-label="Search">
+                        <button class="btn btn-outline-success" type="submit">Search</button>
+                    </form>
+    
+                    <div class="login-info d-flex">
+                        <div class="align-self-center ps-4 dropdown">
+                            <a href="#" class="dropdown-arrow text-light link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" data-bs-offset="0,20" aria-expanded="false">
+                                <img class="user-avatar p-0 border-dark border rounded-circle ms-auto" src="../static/images/user_avatar_placeholder.jpeg" alt="">
+                            </a>
+                            <ul class="dropdown-menu text-small">
+                                <li class="dropdown-item-text">Nickname</li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#">Settings</a></li>
+                                <li><a class="dropdown-item" href="#">Profile</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#">Sign out</a></li>
+                              </ul>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </header>
-
-    <div class="container">
-        <div class="row justify-content-between pt-4">
-            <div class="col-8">
-
-            </div>
-            <div class="col-3">
-                <div class="row pb-3">
-                    <p class="h5">Popular tags</p>
-                    <div class="tags">
-                        <a href="#"><span class="badge text-bg-primary">Python</span></a>
-                        <a href="#"><span class="badge text-bg-warning">JavaScript</span></a>
-                        <a href="#"><span class="badge text-bg-danger">Go</span></a>
-                        <a href="#"><span class="badge text-bg-success">Kotlin</span></a>
+        </header>
+    
+        <main class="container">
+            <div class="row justify-content-between pt-4">
+                <section class="col-8">
+    
+                </section>
+                <aside class="col-3">
+                    <div class="row pb-3">
+                        <p class="h5">Popular tags</p>
+                        <div class="tags">
+                            <a href="#"><span class="badge text-bg-primary">Python</span></a>
+                            <a href="#"><span class="badge text-bg-warning">JavaScript</span></a>
+                            <a href="#"><span class="badge text-bg-danger">Go</span></a>
+                            <a href="#"><span class="badge text-bg-success">Kotlin</span></a>
+                        </div>
                     </div>
-                </div>
-                <div class="row">
-                    <p class="h5">Best members</p>
-                    <div class="container">
-                        <ul class="list-group">
-                            <a href="#">
-                                <li class="list-group-item">
-                                    <img class="user-avatar p-0 border-dark border rounded-circle ms-auto me-2" src="../static/images/user_avatar_placeholder.jpeg" alt="">
-                                    <span>Dan Brown</span>
-                                </li>
-                            </a>
-                            <a href="#">
-                                <li class="list-group-item">
-                                    <img class="user-avatar p-0 border-dark border rounded-circle ms-auto me-2" src="../static/images/user_avatar_placeholder.jpeg" alt="">
-                                    <span>Ben Black</span>
-                                </li>
-                            </a>
-                            <a href="#">
-                                <li class="list-group-item">
-                                    <img class="user-avatar p-0 border-dark border rounded-circle ms-auto me-2" src="../static/images/user_avatar_placeholder.jpeg" alt="">
-                                    <span>Constantine</span>
-                                </li>
-                            </a>
-                            <a href="#">
-                                <li class="list-group-item">
-                                    <img class="user-avatar p-0 border-dark border rounded-circle ms-auto me-2" src="../static/images/user_avatar_placeholder.jpeg" alt="">
-                                    <span>Allan White</span>
-                                </li>
-                            </a>
-                        </ul>
+                    <div class="row">
+                        <p class="h5">Best members</p>
+                        <div class="container">
+                            <ul class="list-group">
+                                <a href="#">
+                                    <li class="list-group-item">
+                                        <img class="user-avatar p-0 border-dark border rounded-circle ms-auto me-2" src="../static/images/user_avatar_placeholder.jpeg" alt="">
+                                        <span>Dan Brown</span>
+                                    </li>
+                                </a>
+                                <a href="#">
+                                    <li class="list-group-item">
+                                        <img class="user-avatar p-0 border-dark border rounded-circle ms-auto me-2" src="../static/images/user_avatar_placeholder.jpeg" alt="">
+                                        <span>Ben Black</span>
+                                    </li>
+                                </a>
+                                <a href="#">
+                                    <li class="list-group-item">
+                                        <img class="user-avatar p-0 border-dark border rounded-circle ms-auto me-2" src="../static/images/user_avatar_placeholder.jpeg" alt="">
+                                        <span>Constantine</span>
+                                    </li>
+                                </a>
+                                <a href="#">
+                                    <li class="list-group-item">
+                                        <img class="user-avatar p-0 border-dark border rounded-circle ms-auto me-2" src="../static/images/user_avatar_placeholder.jpeg" alt="">
+                                        <span>Allan White</span>
+                                    </li>
+                                </a>
+                            </ul>
+                        </div>
                     </div>
-                </div>
+                </aside>
             </div>
-        </div>
+        </main>
+
+        <div class="push"></div>
     </div>
 
-    <footer class="footer">
+    <footer class="footer text-white bg-dark mt-3">
         <div class="container">
-          <span class="text-muted">Place sticky footer content here.</span>
+          <span>Place sticky footer content here.</span>
         </div>
     </footer>
 
-    <script src="../static/js_bootstrap/popper.min.js"></script>
-    <script src="../static/js_bootstrap/bootstrap.min.js"></script>
+    <script src="../static/js_lib/popper.min.js"></script>
+    <script src="../static/js_lib/bootstrap.min.js"></script>
     <script src="../static/js/main.js"></script>
 </body>
 </html>
