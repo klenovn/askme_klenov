@@ -1,0 +1,49 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+
+<h3 class="mb-3">New question</h3>
+
+<form class="g-3 needs-validation" novalidate>
+    <div class="row mb-3">
+        <div class="col-1">
+            <label for="questionTitle" class="form-label col-3">Title</label>
+        </div>
+        <div class="col-9">
+            <input type="text" class="form-control col-9" id="questionTitle" required>
+            <div class="invalid-feedback">
+                Please enter a title.
+            </div>
+            <div class="valid-feedback">
+                Correct
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-1">
+            <label for="questionTitle" class="form-label col-3">Text</label>
+        </div>
+        <div class="col-9">
+            <textarea type="text" class="form-control col-9" id="questionTitle validationTextarea" required></textarea>
+            <div class="invalid-feedback">
+                Please enter a message in the textarea.
+            </div>
+            <div class="valid-feedback">
+                Correct
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-1">
+            <label for="tags" class="form-label col-3">Tags</label>
+        </div>
+        <div class="col-9">
+            <input type="text" class="form-control col-9" id="tags">
+        </div>
+    </div>
+    <div class="row">
+        <button type="submit" class="btn col-3 btn-primary">Post a question</button>
+    </div>
+</form>
+
+{% endblock content %}

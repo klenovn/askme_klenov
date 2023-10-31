@@ -1,10 +1,12 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../static/css_lib/bootstrap.min.css">
-    <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="stylesheet" href="{% static '/css_lib/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static '/css/style.css' %}">
     <title>Askme</title>
 </head>
 <body>
@@ -45,7 +47,8 @@
         <main class="container">
             <div class="row justify-content-between pt-4">
                 <section class="col-8">
-    
+                    {% block content %}
+                    {% endblock %}
                 </section>
                 <aside class="col-3">
                     <div class="row pb-3">
@@ -101,8 +104,8 @@
         </div>
     </footer>
 
-    <script src="../static/js_lib/popper.min.js"></script>
-    <script src="../static/js_lib/bootstrap.min.js"></script>
-    <script src="../static/js/main.js"></script>
+    <script src="{% static '/js_lib/popper.min.js' %}"></script>
+    <script src="{% static '/js_lib/bootstrap.min.js' %}"></script>
+    <script src="{% static '/js/main.js' %}"></script>
 </body>
 </html>
