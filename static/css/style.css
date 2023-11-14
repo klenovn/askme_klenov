@@ -71,7 +71,7 @@ main {
     color: white;
 }
 
-.question-user-avatar {
+.question-user-avatar, .answer-user-avatar {
     width: 64px;
     height: 64px;
 }
