@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator, EmptyPage
+from .models import Question, QuestionTag
 
 PER_PAGE = 6
 
@@ -33,8 +34,14 @@ def get_number_of_pages(objects, per_page=PER_PAGE):
 
     return number_of_pages
 
+def get_tags_per_page(page):
+    tags_per_question = []
+    for question in page:
+        tags_per_question.append(QuestionTag.objects.get_tags_by_question(question))
+    return tags_per_question
 
 def index(request):
+    questions = Question.objects.get_newest_questions()
     page_number = get_page_or_one(request)
 
     try:
@@ -50,7 +57,7 @@ def index(request):
 
 def question(request, question_id):
     page_number = get_page_or_one(request)
-
+    questions = Question.objects.get_newest_questions()
     question_item = questions[question_id]
     try:
         page = paginate(answers, page_number)
@@ -58,7 +65,7 @@ def question(request, question_id):
     except:
         return redirect('not_found')
 
-    context = {'question': question_item, 'page': page, 'number_of_pages': number_of_pages}
+    context = {'question': question_item, 'page': page, 'number_of_pages': number_of_pages, }
 
     return render(request, 'question.html', context)
 
@@ -72,6 +79,8 @@ def ask(request):
     return render(request, 'ask.html')
 
 def hot(request):
+    questions = Question.objects.get_best_questions()
+
     page_number = get_page_or_one(request)
 
     try:
