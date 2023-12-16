@@ -28,7 +28,8 @@ urlpatterns = [
     path('ask/', app_views.ask, name='ask'),
     path('hot/', app_views.hot, name='hot'),
     path('question/<int:question_id>', app_views.question, name='question'),
-    path('tag/<str:tag_name>', app_views.tag, name='tag'),
+    path('tag/<str:tag_name>', app_views.tag_index, name='tag'),
+    path('settings/', app_views.settings, name='settings'),
     path('404', app_views.not_found, name='not_found')
 ]
 

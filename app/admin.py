@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Profile, Tag, Question, Answer, Like, QuestionTag
+from .models import Profile, Tag, Question, Answer, Like, QuestionTag, AnswerManager
 
 
 admin.site.register(Profile)

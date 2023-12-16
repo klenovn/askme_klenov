@@ -1,0 +1,71 @@
+{% extends "layouts/base.html" %}
+
+{% load static %}
+
+{% block content %}
+<h2 class="mb-4">User settings</h2>
+<form class="g-3 needs-validation" novalidate>
+    <div class="row">
+        <div class="offset-1 mb-3 col-auto mx-auto">
+            <div class="settings-avatar mx-auto"><img class="settings-avatar" src="{% static '/images/user_avatar_placeholder.jpeg' %}" alt=""></div>
+            <div class="username h2">Username</div>
+        </div>
+    </div>
+    <div class="border rounded">
+        <div class="row m-3">
+            <div class="col-1">
+                <label for="email" class="form-label col-3">Change Email</label>
+            </div>
+            <div class="col-10 ms-auto px-2">
+                <input type="email" class="form-control col-9" id="email" maxlength="60" required>
+                <div class="invalid-feedback">
+                    Please enter correct email address.
+                </div>
+                <div class="valid-feedback">
+                    Correct
+                </div>
+            </div>
+        </div>
+        <div class="row m-3">
+            <div class="col-1">
+                <label for="nickname" class="form-label col-3">Change nickname</label>
+            </div>
+            <div class="col-10 ms-auto px-2">
+                <input type="text" class="form-control col-9" id="nickname" maxlength="30" required>
+                <div class="invalid-feedback">
+                    Please enter your displayed name.
+                </div>
+                <div class="valid-feedback">
+                    Correct
+                </div>
+            </div>
+        </div>
+        <div class="row m-3">
+            <div class="col-1">
+                <label for="loginPassword">Change password</label>
+            </div>
+            <div class="col-10 ms-auto px-2">
+                <input type="password" class="form-control col-9" id="loginPassword" maxlength="30" required>
+                <div class="invalid-feedback">
+                    Please enter your password.
+                </div>
+                <div class="valid-feedback">
+                    Correct
+                </div>
+            </div>
+            
+        </div>
+        <div class="row m-3">
+            <div class="col-1">
+                <label for="formFile" class="form-label">Change avatar</label>
+            </div>
+            <div class="col-10 ms-auto px-2">
+                <input class="form-control" type="file" id="formFile">
+            </div>
+        </div>
+        <div class="row m-3 offset-2">
+            <button type="submit" class="btn col-3 btn-primary">Update info</button>
+        </div>
+    </div>
+</form>
+{% endblock content %}

@@ -13,13 +13,16 @@
         </div>
         <div class="col-10 my-auto">
             <a class="question-title" href="{% url 'question' question_id=question.id %}">{{ question.title }}</a>
-            <div class="question-text">{{ question.text }}</div>
+            <div class="question-text">{{ question.content }}</div>
             <div class="d-flex">
-                <a href="{% url 'question' question_id=question.id %}">Show answers ({{ questions_count }})</a>
+                <a href="{% url 'question' question_id=question.id %}">Show answers</a>
                 <div class="ms-5">
+                    {% if tags %}
                     <span>Tags:</span>
-                    <a class="question-tag" href="#">Kotlin</a>
-                    <a class="question-tag" href="#">JavaScript</a>
+                    {% endif %}
+                    {% for tag in tags %}
+                    <a class="question-tag" href="{% url "tag" tag_name=tag %}">{{ tag }}</a>
+                    {% endfor %}
                 </div>
             </div>
         </div>

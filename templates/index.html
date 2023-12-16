@@ -6,7 +6,7 @@
 
 <h1 class="mb-3">Questions</h1>
 
-{% for question in page %}
+{% for question, tags in items_with_tags %}
 {% include "components/question-item.html" %}
 {% endfor %}
 

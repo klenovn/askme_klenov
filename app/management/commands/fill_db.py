@@ -54,7 +54,7 @@ class Command(BaseCommand):
                 answers.append(answer)
         
 
-        for i in range(100 * num):
+        for i in range(10 * num):
             user = random.choice(created_users)
             like_type = random.choice(["question", "answer"])
             if like_type == "question":
