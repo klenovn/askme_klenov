@@ -1,11 +1,10 @@
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
 from faker import Faker
-from django.db import transaction
+from english_words import get_english_words_set
 import random
-import string
 
-from app.models import Tag, Answer, Like, Question, QuestionTag
+from app.models import Tag, Answer, QuestionReaction, Question, QuestionTag, AnswerReaction
 
 Faker.seed(random.Random)
 fake = Faker()
@@ -18,60 +17,65 @@ class Command(BaseCommand):
         parser.add_argument("num", type=int)
 
     def handle(self, *args, **kwargs):
+        print("Started")
+
+
         num = kwargs['num']
         fake_password = 'TestPass1234!'
+        words = list(get_english_words_set(['web2'], lower=True))[::10]
+
+        usernames = list(set([fake.simple_profile()['username'] for _ in range(num)]))
         users = [User(
-            username=(fake.simple_profile()['username']+fake.first_name()+fake.word()),
-            email=fake.simple_profile()['mail']+str(i),
+            username=i,
+            email=str(i) + "@fakemail.com",
             password=fake_password
-        ) for i in range(num)]
-
+        ) for i in usernames]
         User.objects.bulk_create(users)
+        print("Created users")
 
-        created_users = User.objects.all()
-        tags=[Tag(word=(fake.words(nb=5, unique=True)[random.randint(-3, -1)].capitalize()+str(random.choice(string.ascii_letters))+str(random.choice(string.ascii_letters))+str(i))) for i in range(num)]
+        tags=[Tag(word=word) for word in words]
         Tag.objects.bulk_create(tags)
+        print("Created tags")
 
-        questions = [Question(
-                title=fake.sentence()[:-1]+'?',
-                content=fake.paragraph(),
-                author=random.choice(created_users),
-                rating=random.randint(0, 10) * random.random()
-            ) for i in range(10*num)]
+        authors = User.objects.order_by('?')
+        questions = [Question(title=fake.sentence()[:-1]+'?', content=fake.paragraph(), author=authors[i]) for _ in range(random.randint(0, 24)) for i in range(len(authors))]
         Question.objects.bulk_create(questions)
+        print("Created question")
 
-        
-        answers = []
-        for question in questions:
-            for i in range(random.randint(0, 5)):
-                answer = Answer(
-                    content=fake.paragraph(),
-                    author=random.choice(created_users),
-                    question=question,
-                    rating=random.randint(0, 10) * random.random()
-                )
-                answer.save()
-                answers.append(answer)
-        
+        def new_answer(content, author, question, i):
+            if i % 100 == 0:
+                print(i)
+            return Answer(content=content, author=author, question=question)
+        users_number = User.objects.all().count()
+        questions = Question.objects.all()
+        answers = [new_answer(content=fake.paragraph(), author=User.objects.get(id=random.randint(2, users_number - 1)), question=questions[i], i=i) for i in range(2, len(questions)-1) for _ in range(random.randint(0, 16))]
+        Answer.objects.bulk_create(answers)
 
-        for i in range(10 * num):
-            user = random.choice(created_users)
-            like_type = random.choice(["question", "answer"])
-            if like_type == "question":
-                obj = random.choice(questions)
-            else:
-                obj = random.choice(answers)
-            Like.objects.create(
-                user=user,
-                question=obj if like_type == "question" else None,
-                answer=obj if like_type == "answer" else None,
-                is_like=random.choice([True, False])
-            )
+        tags = Tag.objects.all()
+        questions = Question.objects.all()
+        questionTags = [QuestionTag(question=question, tag=random.choice(tags)) for _ in range(1, 5) for question in questions]
+        QuestionTag.objects.bulk_create(questionTags)
+        print("Added tags to questions")
 
+        questions = Question.objects.all()
+        users = User.objects.all()
+        question_reactions = [QuestionReaction(
+            question=question,
+            user=random.choice(users),
+            type=random.choice(['Like', 'Like', 'Like', 'Like', 'Dislike'])
+        ) for question in questions for _ in range(random.randint(0, 15))]
+        QuestionReaction.objects.bulk_create(question_reactions)
+        print("Created question reactions")
 
-            questionTags = []
-            for question in questions:
-                questionTags.extend([QuestionTag(question=question, tag=Tag.objects.order_by('?').first()) for i in range(random.randint(0, 3))])
-            QuestionTag.objects.bulk_create(questionTags)
+        answers = Answer.objects.all()
+        users = User.objects.all()
+        answer_reactions = [AnswerReaction(
+            answer=answer,
+            user=random.choice(users),
+            type=random.choice(['Like', 'Like', 'Like', 'Like', 'Dislike'])
+        ) for answer in answers for _ in range(random.choice([0, 0, 0, 1, 2, 3]))]
+        AnswerReaction.objects.bulk_create(answer_reactions)
+        print("Created answer reactions")
+
         self.stdout.write(self.style.SUCCESS(f'Successfully created {num} fake users'))
 

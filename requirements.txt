@@ -1,7 +1,14 @@
 asgiref==3.7.2
+click==8.1.7
+colorama==0.4.6
 Django==4.2.6
+english-words==2.0.1
+Faker==20.0.3
+mysql-server-has-gone-away==2.0.0
 mysqlclient==2.2.0
 Pillow==10.1.0
+python-dateutil==2.8.2
+six==1.16.0
 sqlparse==0.4.4
 typing_extensions==4.8.0
 tzdata==2023.3

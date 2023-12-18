@@ -1,12 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models import F, ExpressionWrapper, fields
 
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     avatar = models.ImageField(default='avatars/user_avatar_placeholder.jpeg', upload_to='avatars/', null=True, blank=True)
     registration_date = models.DateTimeField(auto_now_add=True)
-    rating = models.FloatField(default=0)
 
     def __str__(self):
         return self.user.username
@@ -21,7 +21,21 @@ class Tag(models.Model):
 
 class QuestionManager(models.Manager):
     def get_best_questions(self):
-        return self.order_by('-rating', '-created_at')
+        annotated_qs = self.annotate(
+            like_count=models.Count('questionreaction', filter=models.Q(questionreaction__type='Like')),
+            dislike_count=models.Count('questionreaction', filter=models.Q(questionreaction__type='Dislike'))
+        )
+
+        annotated_qs = annotated_qs.annotate(
+            popularity=ExpressionWrapper(
+                F('like_count') - F('dislike_count'),
+                output_field=fields.IntegerField()
+            )
+        )
+
+        sorted_qs = annotated_qs.order_by('-popularity')
+
+        return sorted_qs
 
     def get_newest_questions(self):
         return self.order_by('-created_at')
@@ -32,7 +46,6 @@ class Question(models.Model):
     content = models.TextField()
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
-    rating = models.IntegerField(default=0)
 
     objects = QuestionManager()
 
@@ -57,7 +70,6 @@ class Answer(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     is_correct = models.BooleanField(default=False)
-    rating = models.IntegerField(default=0)
 
     def __str__(self):
         return f"Answer to '{self.question.title}'"
@@ -65,30 +77,57 @@ class Answer(models.Model):
     objects = AnswerManager()
 
 
-class LikeManager(models.Manager):
-    def get_lies_number_by_question(self, question):
-        return self.filter(question=question, is_like = True).count() - self.filter(question=question, is_like = False).count()
+class Reaction(models.Model):
+    TYPE_CHOICES = [
+        ('Like', 'Like'),
+        ('Dislike', 'Dislike')
+    ]
 
-
-class Like(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    question = models.ForeignKey(Question, on_delete=models.CASCADE, null=True, blank=True)
-    answer = models.ForeignKey(Answer, on_delete=models.CASCADE, null=True, blank=True)
-    is_like = models.BooleanField(default=True)
+    type = models.CharField(max_length=10, choices=TYPE_CHOICES, default=True)
+
+    class Meta:
+        abstract = True
 
     def __str__(self):
-        return f"Like by {self.user.username} on {self.question.title if self.question else self.answer.question.title}"
+        return f"Reaction by {self.user.username} on {self.question.title if self.question else self.answer.question.title}"
+
+
+class QuestionReactionManager(models.Manager):
+
+    def get_reactions(self, question_id):
+        return self.filter(question=Question.objects.get(id=question_id), type='Like').count() - self.filter(question=Question.objects.get(id=question_id), type='Dislike').count()
+
     
-    objects = LikeManager()
+class QuestionReaction(Reaction):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+
+    objects = QuestionReactionManager()
+
+
+class AnswerReactionManager(models.Manager):
+
+    def get_reactions(self, answer_id):
+        return self.filter(answer=Answer.objects.get(id=answer_id), type='Like').count() - self.filter(answer=Answer.objects.get(id=answer_id), type='Dislike').count()
     
-    
+
+class AnswerReaction(Reaction):
+    answer = models.ForeignKey(Answer, on_delete=models.CASCADE)
+
+    objects = AnswerReactionManager()
+
+
 class QuestionTagManager(models.Manager):
 
     def get_tags_by_question(self, question):
         return [elem.tag.word for elem in self.filter(question=question)]
     
     def get_question_by_tag_name(self, tag_name):
-        return [elem.question for elem in self.filter(tag=Tag.objects.get(word=tag_name))]
+        try:
+            tag = Tag.objects.get(word=tag_name)
+            return [elem.question for elem in self.filter(tag=tag)]
+        except Tag.DoesNotExist:
+            return []
     
 
 class QuestionTag(models.Model):

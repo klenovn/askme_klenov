@@ -7,7 +7,7 @@
             <div class="answer-username">{{ answer.username }}</div>
             <div class="reactions d-flex align-items-end justify-content-center">
                 <button class="btn p-0 no-focus"><img class="reaction" src="{% static '/images/thumbs-up-regular.svg' %}" alt=""></button>
-                <span class="fw-bold mx-2">15</span>
+                <span class="fw-bold mx-2">{{ reactions }}</span>
                 <button class="btn p-0 no-focus"><img class="reaction" src="{% static '/images/thumbs-down-regular.svg' %}" alt=""></button>
             </div>
         </div>

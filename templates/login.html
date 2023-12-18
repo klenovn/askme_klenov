@@ -3,13 +3,14 @@
 {% block content %}
 
 <h2 class="mb-4">Log in</h2>
-<form class="g-3 needs-validation" novalidate>
+<form class="g-3 needs-validation" method="post" novalidate>
+    {% csrf_token %}
     <div class="row mb-3">
         <div class="col-1">
             <label for="login" class="form-label col-3">Login</label>
         </div>
         <div class="col-10 ms-auto  px-2">
-            <input type="text" class="form-control col-9" id="login" maxlength="30" required>
+            <input name="username" type="text" class="form-control col-9" id="login" maxlength="30" required>
             <div class="invalid-feedback">
                 Please enter a login name.
             </div>
@@ -24,7 +25,7 @@
             <label for="loginPassword">Password</label>
         </div>
         <div class="col-10 ms-auto px-2">
-            <input type="password" class="form-control col-9" id="loginPassword" maxlength="30" required>
+            <input name="password" type="password" class="form-control col-9" id="loginPassword" maxlength="30" required>
             <div class="invalid-feedback">
                 Please enter your password.
             </div>

@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator, EmptyPage
-from .models import Question, QuestionTag, Answer
+from .models import Question, QuestionTag, Answer, QuestionReaction, AnswerReaction
 
 PER_PAGE = 6
 
@@ -24,11 +24,17 @@ def handle_pagination(request, objects, template_name, context=None, need_tags=F
 
         if page is None:
             raise EmptyPage
+        reactions = []
         number_of_pages = pagination['number_of_pages']
         if need_tags:
+            reactions = [QuestionReaction.objects.get_reactions(question.id) for question in page]
             tags = get_tags_per_page(page)
-            items_with_tags = tuple(zip(page, tags))
-            context['items_with_tags'] = items_with_tags
+            items_with_tags = tuple(zip(page, tags, reactions))
+            context['items_with_reactions_tags'] = items_with_tags
+        else:
+            reactions = [AnswerReaction.objects.get_reactions(answer.id) for answer in page]
+            context['items_with_reactions'] = tuple(zip(page, reactions))
+
     except EmptyPage:
         return redirect('not_found')
     
@@ -59,13 +65,15 @@ def tag_index(request, tag_name):
     return handle_pagination(request, questions, 'tag.html', {'questions_count': len(questions), 'tag_name': tag_name}, need_tags=True)
 
 def question(request, question_id):
-    questions = Question.objects.get_newest_questions()
-    question_item = questions[question_id - 1]
+    question_item = Question.objects.get(id=question_id)
+    question_reactions = QuestionReaction.objects.get_reactions(question_id)
     answers = Answer.objects.get_answers_by_question(question_item)
-
-    return handle_pagination(request, answers, 'question.html', {'answers_count': len(answers), 'question': question_item})
+    question_tags = QuestionTag.objects.get_tags_by_question(Question.objects.get(id=question_id))
+    return handle_pagination(request, answers, 'question.html', {'answers_count': len(answers), 'question': question_item, 'question_reactions': question_reactions, 'question_tags': question_tags})
 
 def login(request):
+    print(request.GET)
+    print(request.POST)
     return render(request, 'login.html')
 
 def signup(request):
