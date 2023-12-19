@@ -23,13 +23,14 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', app_views.index, name='index'),
-    path('login/', app_views.login, name='login'),
-    path('signup/', app_views.signup, name='signup'),
+    path('login/', app_views.log_in, name='login'),
+    path('signup/', app_views.sign_up, name='signup'),
+    path('logout/', app_views.log_out, name='logout'),
     path('ask/', app_views.ask, name='ask'),
     path('hot/', app_views.hot, name='hot'),
     path('question/<int:question_id>', app_views.question, name='question'),
     path('tag/<str:tag_name>', app_views.tag_index, name='tag'),
-    path('settings/', app_views.settings, name='settings'),
+    path('profile/edit', app_views.settings, name='settings'),
     path('404', app_views.not_found, name='not_found')
 ]
 

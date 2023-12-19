@@ -14,6 +14,7 @@
 
         <header class="p-3 text-bg-dark">
             <div class="container">
+                
                 <div class="d-flex flex-wrap align-items-center justify-content-between">
                     <a class="navbar-brand py-0 logo d-flex align-items-center" href="{% url 'index' %}">
                         <img class="logo-image" src="../static/images/logo.png" alt="">
@@ -24,11 +25,28 @@
                         <input type="search" class="nav-search me-1 form-control form-control-dark text-bg-dark" id="navSearch" placeholder="Search..." aria-label="Search">
                         <button class="btn btn-outline-success" type="submit">Search</button>
                     </form>
-    
-                    <div class="col-md-3 text-end">
-                        <a href="{% url "login" %}"><button type="button" class="btn btn-outline-primary me-2">Login</button></a>
-                        <a href="{% url "signup" %}"><button type="button" class="btn btn-primary">Sign-up</button></a>
-                    </div>
+                    {% if user.is_authenticated %}
+                        <div class="login-info d-flex">
+                            <div class="align-self-center ps-4 dropdown">
+                                <a href="#" class="dropdown-arrow text-light link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" data-bs-offset="0,20" aria-expanded="false">
+                                    <img class="user-avatar p-0 border-dark border rounded-circle ms-auto" src="../static/images/user_avatar_placeholder.jpeg" alt="">
+                                </a>
+                                <ul class="dropdown-menu text-small">
+                                    <li class="dropdown-item-text">{{ user.username }}</li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="{% url "settings" %}">Settings</a></li>
+                                    <li><a class="dropdown-item" href="{% url "settings" %}">Profile</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="{% url "logout" %}?continue={{ request.path }}">Log out</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="col-md-3 text-end">
+                            <a href="{% url "login" %}?continue={{ request.path }}"><button type="button" class="btn btn-outline-primary me-2">Login</button></a>
+                            <a href="{% url "signup" %}"><button type="button" class="btn btn-primary">Sign-up</button></a>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </header>

@@ -1,95 +1,19 @@
 {% extends "layouts/base.html" %}
+{% load django_bootstrap5 %}
 
 {% block content %}
 
 <h2 class="mb-4">Sign up</h2>
-<form class="g-3 needs-validation" novalidate>
+<form method="POST" class="g-3 needs-validation" novalidate>
+    {% csrf_token %}
+    {% bootstrap_form form %}
+
     <div class="row mb-3">
-        <div class="col-1">
-            <label for="login" class="form-label col-3">Login</label>
-        </div>
-        <div class="col-10 ms-auto px-2">
-            <input type="text" class="form-control col-9" id="login" maxlength="30" required>
-            <div class="invalid-feedback">
-                Please enter a login name.
-            </div>
-            <div class="valid-feedback">
-                Correct
-            </div>
-        </div>
-    </div>
-    <div class="row mb-3">
-        <div class="col-1">
-            <label for="email" class="form-label col-3">Email</label>
-        </div>
-        <div class="col-10 ms-auto px-2">
-            <input type="email" class="form-control col-9" id="email" maxlength="60" required>
-            <div class="invalid-feedback">
-                Please enter correct email address.
-            </div>
-            <div class="valid-feedback">
-                Correct
-            </div>
-        </div>
-    </div>
-    <div class="row mb-3">
-        <div class="col-1">
-            <label for="nickname" class="form-label col-3">Nickname</label>
-        </div>
-        <div class="col-10 ms-auto px-2">
-            <input type="text" class="form-control col-9" id="nickname" maxlength="30" required>
-            <div class="invalid-feedback">
-                Please enter your displayed name.
-            </div>
-            <div class="valid-feedback">
-                Correct
-            </div>
-        </div>
-    </div>
-    <div class="row mb-3">
-        <div class="col-1">
-            <label for="loginPassword">Password</label>
-        </div>
-        <div class="col-10 ms-auto px-2">
-            <input type="password" class="form-control col-9" id="loginPassword" maxlength="30" required>
-            <div class="invalid-feedback">
-                Please enter your password.
-            </div>
-            <div class="valid-feedback">
-                Correct
-            </div>
-        </div>
-        
-    </div>
-    <div class="row mb-3">
-        <div class="col-1">
-            <label for="loginRepeatPassword">Repeat password</label>
-        </div>
-        <div class="col-10 ms-auto px-2">
-            <input type="password" class="form-control col-9" id="loginRepeatPassword" maxlength="30" required>
-            <div class="invalid-feedback">
-                Please repeat your password.
-            </div>
-            <div class="valid-feedback">
-                Correct
-            </div>
-        </div>
-        
-    </div>
-    <div class="row mb-3">
-        <div class="col-1">
-            <label for="formFile" class="form-label">Avatar</label>
-        </div>
-        <div class="col-10 ms-auto px-2">
-            <input class="form-control" type="file" id="formFile">
-        </div>
-    </div>
-    <div class="row mb-3 offset-2">
-        <button type="submit" class="btn col-3 btn-primary">Sign up</button>
+        <button type="submit" class="btn col-3 btn-primary ms-auto me-auto">Sign up</button>
     </div>
 
-    <div class="row mb-3 offset-2 px-0">
-        <a class="px-0" href="#">Already have an account? Log in</a>
+    <div class="row mb-3 px-0">
+        <a class="px-0 text-center" href="{% url "login" %}">Already have an account? Log in</a>
     </div>
 </form>
 

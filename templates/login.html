@@ -1,46 +1,18 @@
 {% extends "layouts/base.html" %}
-
+{% load django_bootstrap5 %}
 {% block content %}
 
 <h2 class="mb-4">Log in</h2>
 <form class="g-3 needs-validation" method="post" novalidate>
     {% csrf_token %}
+
+    {% bootstrap_form form %}
     <div class="row mb-3">
-        <div class="col-1">
-            <label for="login" class="form-label col-3">Login</label>
-        </div>
-        <div class="col-10 ms-auto  px-2">
-            <input name="username" type="text" class="form-control col-9" id="login" maxlength="30" required>
-            <div class="invalid-feedback">
-                Please enter a login name.
-            </div>
-            <div class="valid-feedback">
-                Correct
-            </div>
-        </div>
-    </div>
-    
-    <div class="row mb-3">
-        <div class="col-1">
-            <label for="loginPassword">Password</label>
-        </div>
-        <div class="col-10 ms-auto px-2">
-            <input name="password" type="password" class="form-control col-9" id="loginPassword" maxlength="30" required>
-            <div class="invalid-feedback">
-                Please enter your password.
-            </div>
-            <div class="valid-feedback">
-                Correct
-            </div>
-        </div>
-    </div>
-    
-    <div class="row mb-3 offset-2">
-        <button type="submit" class="btn col-3 btn-primary">Log in</button>
+        <button type="submit" class="btn col-3 btn-primary ms-auto me-auto">Log in</button>
     </div>
 
-    <div class="row mb-3 offset-2 px-0">
-        <a class="px-0" href="#">Create new account</a>
+    <div class="row mb-3 px-0">
+        <a class="px-0 text-center" href="{% url "signup" %}">Create new account</a>
     </div>
 </form>
 
