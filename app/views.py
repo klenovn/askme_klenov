@@ -38,7 +38,7 @@ def paginate(objects, page, per_page=PER_PAGE):
     except EmptyPage:
         return None
 
-def handle_pagination(request, objects, template_name, context=None, need_tags=False):
+def handle_pagination(request, objects, context=None, need_tags=False):
     page_number = get_page_or_one(request)
     context = context or {}
 
@@ -63,7 +63,7 @@ def handle_pagination(request, objects, template_name, context=None, need_tags=F
         return redirect('not_found')
     
     context.update({'page': page, 'number_of_pages': number_of_pages})
-    return render(request, template_name, context)
+    return context
 
 def get_page_or_one(request):
     page_number = request.GET.get('page')
@@ -78,22 +78,30 @@ def get_tags_per_page(page):
 
 def index(request):
     questions = Question.objects.get_newest_questions()
-    return handle_pagination(request, questions, 'index.html', need_tags=True)
+    context = handle_pagination(request, questions, need_tags=True)
+
+    return render(request, 'index.html', context)
 
 def hot(request):
     questions = Question.objects.get_best_questions()
-    return handle_pagination(request, questions, 'index.html', {'questions_count': len(questions)}, need_tags=True)
+    context = handle_pagination(request, questions, {'questions_count': len(questions)}, need_tags=True)
+    return render(request, 'index.html', context)
 
 def tag_index(request, tag_name):
     questions = [question for question in QuestionTag.objects.get_question_by_tag_name(tag_name)]
-    return handle_pagination(request, questions, 'tag.html', {'questions_count': len(questions), 'tag_name': tag_name}, need_tags=True)
+    context = handle_pagination(request, questions,{'questions_count': len(questions), 'tag_name': tag_name}, need_tags=True)
+
+    return render(request, 'tag.html', context)
 
 def question(request, question_id):
-    question_item = Question.objects.get(id=question_id)
+    try:
+        question_item = Question.objects.get(id=question_id)
+    except:
+        return redirect('not_found')
     question_reactions = QuestionReaction.objects.get_reactions(question_id)
     answers = Answer.objects.get_answers_by_question(question_item)
     question_tags = QuestionTag.objects.get_tags_by_question(Question.objects.get(id=question_id))
-
+    context = handle_pagination(request, answers, {'answers_count': len(answers), 'question': question_item, 'question_reactions': question_reactions, 'question_tags': question_tags})
     if request.method == 'GET':
         answer_form = AnswerForm()
     if request.method == 'POST':
@@ -103,11 +111,17 @@ def question(request, question_id):
             user = request.user
             if user.is_authenticated:
                 Answer.objects.create(content=content, question=question_item, author=user)
+                answers = Answer.objects.get_answers_by_question(question_item)
+                last_page = Paginator(answers, PER_PAGE).num_pages
+                redirect_url = reverse('question', args=[question_id]) + f'?page={last_page}'
+
+                return redirect(redirect_url)
             else:
                 answer_form.add_error(None, 'Login first')
             
-
-    return handle_pagination(request, answers, 'question.html', {'answers_count': len(answers), 'question': question_item, 'question_reactions': question_reactions, 'question_tags': question_tags, 'form': answer_form})
+    context.update({'form': answer_form})
+    print(context['page'].end_index())
+    return render(request, 'question.html', context)
 
 def log_in(request):
     if request.method == 'GET':
@@ -118,6 +132,7 @@ def log_in(request):
             user = authenticate(request, **login_form.cleaned_data)
             if user is not None:
                 login(request, user)
+                messages.success(request, 'You have successfully logged in.')
                 return redirect_to_previous(request)
             else:
                 login_form.add_error(None, "Wrong username or password")
@@ -135,6 +150,7 @@ def sign_up(request):
                 user = user_form.save()
                 if user:
                     login(request, user)
+                    messages.success(request, 'Congratulations! You have successfully created an account.')
                     return redirect(reverse('index'))
                 else:
                     user_form.add_error(None, 'An error occured while creating new account!')
@@ -144,8 +160,10 @@ def sign_up(request):
 
 def log_out(request):
     logout(request)
+    messages.success(request, 'You have logged out!')
     return redirect_to_previous(request)
 
+@login_required
 def ask(request):
     if request.method == 'GET':
         ask_form = AskForm()

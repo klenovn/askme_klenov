@@ -4,13 +4,6 @@
 
 {% block content %}
 <h2 class="mb-4">User settings</h2>
-{% if messages %}
-<ul class="messages">
-    {% for message in messages %}
-        <div class="alert alert-success">{{ message }}</div>
-    {% endfor %}
-</ul>
-{% endif %}
 <form method="POST" class="g-3 needs-validation" novalidate>
     {% csrf_token %}
     <div class="row">
