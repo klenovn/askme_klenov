@@ -46,3 +46,4 @@ class EditProfileForm(forms.Form):
     password = forms.CharField(label='Password', min_length=4, max_length=30, widget=forms.PasswordInput, required=False)
     email = forms.EmailField(required=False)
     old_password = forms.CharField(label='Enter old password', min_length=4, max_length=30, widget=forms.PasswordInput, required=False)
+    image = forms.ImageField(required=False)
