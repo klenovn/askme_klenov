@@ -62,7 +62,7 @@ class AnswerManager(models.Manager):
         answers = self.filter(question=question)
 
         return answers
-    
+      
 
 class Answer(models.Model):
     content = models.TextField()
@@ -97,6 +97,20 @@ class QuestionReactionManager(models.Manager):
 
     def get_reactions(self, question_id):
         return self.filter(question=Question.objects.get(id=question_id), type='Like').count() - self.filter(question=Question.objects.get(id=question_id), type='Dislike').count()
+    
+    def toggle_reaction(self, user, question, type):
+        if type == 'Like':
+            neg_type = 'Dislike'
+        elif type == 'Dislike':
+            neg_type = 'Like'
+
+        if self.filter(user=user, question=question, type=type).exists():
+            self.filter(user=user, question=question, type=type).delete()
+        elif self.filter(user=user, question=question, type=neg_type).exists():
+            self.filter(user=user, question=question, type=neg_type).delete()
+            self.create(user=user, question=question, type=type)
+        else:
+            self.create(user=user, question=question, type=type)
 
     
 class QuestionReaction(Reaction):
@@ -109,6 +123,20 @@ class AnswerReactionManager(models.Manager):
 
     def get_reactions(self, answer_id):
         return self.filter(answer=Answer.objects.get(id=answer_id), type='Like').count() - self.filter(answer=Answer.objects.get(id=answer_id), type='Dislike').count()
+    
+    def toggle_reaction(self, user, answer, type):
+        if type == 'Like':
+            neg_type = 'Dislike'
+        elif type == 'Dislike':
+            neg_type = 'Like'
+
+        if self.filter(user=user, answer=answer, type=type).exists():
+            self.filter(user=user, answer=answer, type=type).delete()
+        elif self.filter(user=user, answer=answer, type=neg_type).exists():
+            self.filter(user=user, answer=answer, type=neg_type).delete()
+            self.create(user=user, answer=answer, type=type)
+        else:
+            self.create(user=user, answer=answer, type=type)
     
 
 class AnswerReaction(Reaction):

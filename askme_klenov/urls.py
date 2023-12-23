@@ -31,7 +31,9 @@ urlpatterns = [
     path('question/<int:question_id>', app_views.question, name='question'),
     path('tag/<str:tag_name>', app_views.tag_index, name='tag'),
     path('profile/edit', app_views.settings, name='settings'),
-    path('404', app_views.not_found, name='not_found')
+    path('404', app_views.not_found, name='not_found'),
+    path('reaction', app_views.reaction, name='reaction'),
+    path('correctanswer', app_views.correct_answer, name='correct_answer')
 ]
 
 if settings.DEBUG:

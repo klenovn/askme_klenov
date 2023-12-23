@@ -41,9 +41,21 @@ class AnswerForm(forms.Form):
     content = forms.CharField(min_length=5)
 
 
-class EditProfileForm(forms.Form):
-    username = forms.CharField(min_length=4, max_length=30, required=False)
-    password = forms.CharField(label='Password', min_length=4, max_length=30, widget=forms.PasswordInput, required=False)
-    email = forms.EmailField(required=False)
-    old_password = forms.CharField(label='Enter old password', min_length=4, max_length=30, widget=forms.PasswordInput, required=False)
-    image = forms.ImageField(required=False)
+class EditProfileForm(forms.ModelForm):
+    avatar = forms.ImageField(required=False)
+
+    class Meta:
+        model = User
+        fields = ['username', 'email']
+
+    def save(self, **kwargs):
+        user = super().save(**kwargs)
+
+        profile = user.profile
+        received_avatar = self.cleaned_data.get('avatar')
+        if received_avatar:
+            profile.avatar = self.cleaned_data.get('avatar')
+            print(f'{self.cleaned_data.get("avatar")}')
+            profile.save()
+
+        return user

@@ -11,11 +11,13 @@
     {% endfor %}
 </ul>
 {% endif %}
-<form method="POST" class="g-3 needs-validation" novalidate>
+<form method="POST" class="g-3 needs-validation" enctype="multipart/form-data" novalidate>
     {% csrf_token %}
     <div class="row">
         <div class="offset-1 mb-3 col-auto mx-auto">
-            <div class="settings-avatar mx-auto"><img class="settings-avatar" src="{% static '/images/user_avatar_placeholder.jpeg' %}" alt=""></div>
+            {% if user.profile.avatar %}
+                <div class="settings-avatar mx-auto"><img class="settings-avatar" src="{{user.profile.avatar.url}}" alt=""></div>
+            {% endif %}
             <div class="username h2">{{ user.username }}</div>
         </div>
     </div>

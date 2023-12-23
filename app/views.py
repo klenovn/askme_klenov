@@ -1,9 +1,12 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
+from django.forms import model_to_dict
+from django.http import JsonResponse
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import check_password
+from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from django.core.paginator import Paginator, EmptyPage
 from .models import Question, QuestionTag, Answer, QuestionReaction, AnswerReaction, Tag
 from .forms import LoginForm, RegisterForm, AskForm, AnswerForm, EditProfileForm
@@ -38,7 +41,7 @@ def paginate(objects, page, per_page=PER_PAGE):
     except EmptyPage:
         return None
 
-def handle_pagination(request, objects, template_name, context=None, need_tags=False):
+def handle_pagination(request, objects, context=None, need_tags=False):
     page_number = get_page_or_one(request)
     context = context or {}
 
@@ -52,18 +55,20 @@ def handle_pagination(request, objects, template_name, context=None, need_tags=F
         number_of_pages = pagination['number_of_pages']
         if need_tags:
             reactions = [QuestionReaction.objects.get_reactions(question.id) for question in page]
+            reaction_types = [QuestionReaction.objects.filter(question=question, user=request.user).first().type if  request.user.is_authenticated and QuestionReaction.objects.filter(question=question, user=request.user).exists() else 'None' for question in page]
             tags = get_tags_per_page(page)
-            items_with_tags = tuple(zip(page, tags, reactions))
+            items_with_tags = tuple(zip(page, tags, reactions, reaction_types))
             context['items_with_reactions_tags'] = items_with_tags
         else:
             reactions = [AnswerReaction.objects.get_reactions(answer.id) for answer in page]
-            context['items_with_reactions'] = tuple(zip(page, reactions))
+            reaction_types = [AnswerReaction.objects.filter(answer=answer, user=request.user).first().type if request.user.is_authenticated and AnswerReaction.objects.filter(answer=answer, user=request.user).exists() else 'None' for answer in page]
+            context['items_with_reactions'] = tuple(zip(page, reactions, reaction_types))
 
     except EmptyPage:
         return redirect('not_found')
     
     context.update({'page': page, 'number_of_pages': number_of_pages})
-    return render(request, template_name, context)
+    return context
 
 def get_page_or_one(request):
     page_number = request.GET.get('page')
@@ -78,22 +83,34 @@ def get_tags_per_page(page):
 
 def index(request):
     questions = Question.objects.get_newest_questions()
-    return handle_pagination(request, questions, 'index.html', need_tags=True)
+    context = handle_pagination(request, questions, need_tags=True)
+
+    return render(request, 'index.html', context)
 
 def hot(request):
     questions = Question.objects.get_best_questions()
-    return handle_pagination(request, questions, 'index.html', {'questions_count': len(questions)}, need_tags=True)
+    context = handle_pagination(request, questions, {'questions_count': len(questions)}, need_tags=True)
+    return render(request, 'index.html', context)
 
 def tag_index(request, tag_name):
     questions = [question for question in QuestionTag.objects.get_question_by_tag_name(tag_name)]
-    return handle_pagination(request, questions, 'tag.html', {'questions_count': len(questions), 'tag_name': tag_name}, need_tags=True)
+    context = handle_pagination(request, questions,{'questions_count': len(questions), 'tag_name': tag_name}, need_tags=True)
+
+    return render(request, 'tag.html', context)
 
 def question(request, question_id):
-    question_item = Question.objects.get(id=question_id)
+    try:
+        question_item = Question.objects.get(id=question_id)
+    except:
+        return redirect('not_found')
+    if request.user.is_authenticated and QuestionReaction.objects.filter(question=Question.objects.get(pk=question_id), user=request.user).exists():
+        question_reaction_type = QuestionReaction.objects.get(question=Question.objects.get(pk=question_id), user = request.user).type
+    else:
+        question_reaction_type = 'None'
     question_reactions = QuestionReaction.objects.get_reactions(question_id)
     answers = Answer.objects.get_answers_by_question(question_item)
     question_tags = QuestionTag.objects.get_tags_by_question(Question.objects.get(id=question_id))
-
+    context = handle_pagination(request, answers, {'answers_count': len(answers), 'question': question_item, 'question_reactions': question_reactions, 'question_tags': question_tags, 'question_reaction_type': question_reaction_type})
     if request.method == 'GET':
         answer_form = AnswerForm()
     if request.method == 'POST':
@@ -103,11 +120,16 @@ def question(request, question_id):
             user = request.user
             if user.is_authenticated:
                 Answer.objects.create(content=content, question=question_item, author=user)
+                answers = Answer.objects.get_answers_by_question(question_item)
+                last_page = Paginator(answers, PER_PAGE).num_pages
+                redirect_url = reverse('question', args=[question_id]) + f'?page={last_page}'
+
+                return redirect(redirect_url)
             else:
                 answer_form.add_error(None, 'Login first')
-            
 
-    return handle_pagination(request, answers, 'question.html', {'answers_count': len(answers), 'question': question_item, 'question_reactions': question_reactions, 'question_tags': question_tags, 'form': answer_form})
+    context.update({'form': answer_form})
+    return render(request, 'question.html', context)
 
 def log_in(request):
     if request.method == 'GET':
@@ -118,6 +140,7 @@ def log_in(request):
             user = authenticate(request, **login_form.cleaned_data)
             if user is not None:
                 login(request, user)
+                messages.success(request, 'You have successfully logged in.')
                 return redirect_to_previous(request)
             else:
                 login_form.add_error(None, "Wrong username or password")
@@ -135,6 +158,7 @@ def sign_up(request):
                 user = user_form.save()
                 if user:
                     login(request, user)
+                    messages.success(request, 'Congratulations! You have successfully created an account.')
                     return redirect(reverse('index'))
                 else:
                     user_form.add_error(None, 'An error occured while creating new account!')
@@ -144,8 +168,10 @@ def sign_up(request):
 
 def log_out(request):
     logout(request)
+    messages.success(request, 'You have logged out!')
     return redirect_to_previous(request)
 
+@login_required
 def ask(request):
     if request.method == 'GET':
         ask_form = AskForm()
@@ -170,29 +196,46 @@ def ask(request):
 @login_required()
 def settings(request):
     if request.method == 'GET':
-        edit_profile_form = EditProfileForm(initial={'username': request.user.username, 'email': request.user.email})
+        edit_profile_form = EditProfileForm(initial=model_to_dict(request.user))
     if request.method == 'POST':
-        edit_profile_form = EditProfileForm(request.POST, initial={'username': request.user.username, 'email': request.user.email})
+        edit_profile_form = EditProfileForm(request.POST, request.FILES, instance=request.user, initial=model_to_dict(request.user))
         if edit_profile_form.is_valid():
-            user = request.user
-            new_username = edit_profile_form.cleaned_data['username']
-            new_password = edit_profile_form.cleaned_data['password']
-            new_email = edit_profile_form.cleaned_data['email']
-            old_password = edit_profile_form.cleaned_data['old_password']
-    
-            if user.check_password(old_password):
-                if new_username and new_username != user.username:
-                    user.username = new_username
-                if new_email and new_email != user.email:
-                    user.email = new_email
-                if new_password and not (user.check_password(new_password)):
-                    user.set_password(new_password)
-                user.save()
-                messages.success(request, 'Your account has been updated successfully.')
-            else:
-                edit_profile_form.add_error(None, 'Your wrote incorrect password')
+            edit_profile_form.save()
+            messages.success(request, 'Your account has been updated successfully.')
 
     return render(request, 'settings.html', {'form': edit_profile_form})
 
 def not_found(request):
     return render(request, 'not-found.html')
+
+@login_required
+@csrf_exempt
+def reaction(request):
+    content_type = request.POST.get('content_type')
+    type = request.POST.get('reaction_type')
+    if content_type == 'question':
+        id = request.POST.get('id')
+        question = get_object_or_404(Question, pk=id)
+        QuestionReaction.objects.toggle_reaction(user=request.user, question=question, type=type)
+        count = QuestionReaction.objects.get_reactions(question_id=id)
+    elif content_type == 'answer':
+        id = request.POST.get('id')
+        answer = get_object_or_404(Answer, pk=id)
+        AnswerReaction.objects.toggle_reaction(user=request.user, answer=answer, type=type)
+        count = AnswerReaction.objects.get_reactions(answer_id=id)
+
+    return JsonResponse({'counter': count})
+
+@csrf_exempt
+def correct_answer(request):
+    answer_id = request.POST.get('id')
+    answer = Answer.objects.get(pk=answer_id)
+    if request.user == answer.question.author:
+        if answer.is_correct == False:
+            answer.is_correct = True
+            answer.save()
+        elif answer.is_correct == True:
+            answer.is_correct = False
+            answer.save()
+
+    return JsonResponse({'Correct': True})

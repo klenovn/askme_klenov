@@ -29,7 +29,7 @@
                         <div class="login-info d-flex">
                             <div class="align-self-center ps-4 dropdown">
                                 <a href="#" class="dropdown-arrow text-light link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" data-bs-offset="0,20" aria-expanded="false">
-                                    <img class="user-avatar p-0 border-dark border rounded-circle ms-auto" src="../static/images/user_avatar_placeholder.jpeg" alt="">
+                                    <img class="user-avatar p-0 border-dark border rounded-circle ms-auto" src="{{ user.profile.avatar.url }}" alt="">
                                 </a>
                                 <ul class="dropdown-menu text-small">
                                     <li class="dropdown-item-text">{{ user.username }}</li>

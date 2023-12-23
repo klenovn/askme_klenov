@@ -41,6 +41,7 @@ main {
 .user-avatar {
     height: 48px;
     width: 48px;
+    object-fit: cover;
 }
 
 .logo {
@@ -74,6 +75,7 @@ main {
 .question-user-avatar, .answer-user-avatar {
     width: 64px;
     height: 64px;
+    object-fit: cover;
 }
 
 .question-like {
@@ -117,4 +119,8 @@ main {
 .settings-avatar {
     width: 100px;
     height: 100px;
+}
+
+.toggled-reaction {
+    filter: invert(60%) sepia(67%) saturate(5505%) hue-rotate(316deg) brightness(101%) contrast(102%);
 }

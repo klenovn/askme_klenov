@@ -8,7 +8,7 @@
 
 <hr class="border border-2 border-dark opacity-75">
 <div class="answers">
-    {% for answer, reactions in items_with_reactions %}
+    {% for answer, reactions, reaction_type in items_with_reactions %}
     {% include "components/answers-answer.html" %}
     {% endfor %}
     {% include "components/pagination.html" %}
